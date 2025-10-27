@@ -1,0 +1,39 @@
+## Tests for PHP code using PHPUnit
+
+name: PHP CI  ## Nom du workflow
+on: ## C'est ce qui dit "quand le workflow tourn""
+  push:
+    branches: [ main ] ##le workflow se lance quand on push sur la branche main
+  pull_request:
+    branches: [ main ] ## le workflow se lance quand on ouvre ou met à jour une Pull Request vers main
+
+jobs: ## ici c'est la partie jobs et leurs étapes
+  build: ## nom du job (build)
+    runs-on: ubuntu-latest  ##le job tourne sur une VM Ubuntu fournie par GitHub actions
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 ## action github pour clone le repo dans la VM
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2  ## action communautaire qui installe php 8.3 dans la VM
+        with:
+          php-version: '8.3'
+      
+
+      - name: Install dependencies ##installe les dependencies du projet via composer
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run tests  ## lance phpunit pour executer les tests unitaires
+        run: vendor/bin/phpunit
+
+
+## Dans ce ficheirs il y a :
+## Les actions GitHub utilisées (uses):
+##      actions/checkout@v2 -> action officielle pour récup le code du repo dans l'environnement CI
+##      shivammathur/setup-php@v2-> ça permet d'installer/configurer PHP (version, extension, etc) dans la machine GitHub Actions
+## Ce sont des actions dites réutilisables elles sont déclarées avec use pas besoin d'écrire tout
+
+## Les commandes executées (run) :
+## composer install --prefer-dist --no-progress --no-suggest -> installe les dépendances PHP (le vendor)
+## vendor/bin/phpunit -> lance les test phpunit
+##composer et phpunit sont donc utilisés dans ce workflow
