@@ -16,5 +16,9 @@
         "composer-phar/php-cs-fixer": "^3.88",
         "phpstan/phpstan": "^2.1",
         "friendsofphp/php-cs-fixer": "^3.89"
+    },
+    "scripts": {
+        "stan-check": "phpstan analyse src tests --level=max",
+        "cs-check": "php-cs-fixer fix --dry-run --diff --using-cache=no src tests"
     }
 }
