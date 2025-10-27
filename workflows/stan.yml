@@ -1,26 +1,38 @@
 ## Test PHPStan analysis in GitHub Actions
-name: PHPStan Analysis
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
-jobs:
-  phpstan:
-    runs-on: ubuntu-latest
+name: PHPStan Analysis  ## Nom du workflow
+on: ## C'est ce qui dit "quand le workflow tourn""
+  push:
+    branches: [ main ] ## le workflow se lance quand on push sur la branche main
+  pull_request:
+    branches: [ main ] ## le workflow se lance quand on ouvre ou met à jour une Pull Request vers main
+
+jobs: ## ici c'est la partie jobs et leurs étapes
+  phpstan: ## nom du job (phpstan) -> ici le but c'est d'analyser la qualité statique du code (erreurs potentielles)
+    runs-on: ubuntu-latest  ## le job tourne sur une VM Ubuntu fournie par GitHub Actions
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2 ## action github pour clone le repo dans la VM
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@v2 ## action pour installer/configurer PHP dans la VM
         with:
-          php-version: '8.3'
-          extensions: mbstring
+          php-version: '8.3' ## version de PHP utilisée par l'analyse
+          extensions: mbstring ## installe aussi l'extension mbstring parce que le projet/environnement en a besoin
 
       - name: Install dependencies
-        run: composer install  --no-progress --no-suggest --prefer-dist
+        run: composer install  --no-progress --no-suggest --prefer-dist ## installe les dépendances PHP (vendor) pareil que dans les autres workflows
 
-      - name: Run PHPStan
-        run: composer run stan-check
+      - name: Run PHPStan  ## lance l'analyse statique de code
+        run: composer run stan-check ## exécute la commande composer "stan-check" (donc PHPStan) pour trouver les erreurs possibles dans le code
+
+## Dans ce fichier il y a :
+## Les actions GitHub utilisées (uses):
+##      actions/checkout@v2 -> action officielle pour récup le code du repo dans l'environnement CI
+##      shivammathur/setup-php@v2 -> ça permet d'installer/configurer PHP (version, extension, etc) dans la machine GitHub Actions
+## (même principe que les autres workflows : actions réutilisables déclarées avec uses:)
+
+## Les commandes executées (run) :
+## composer install  --no-progress --no-suggest --prefer-dist -> installe les dépendances PHP
+## composer run stan-check -> lance PHPStan via un script Composer pour analyser le code statiquement
+## donc ici on utilise Composer + PHPStan dans ce workflow

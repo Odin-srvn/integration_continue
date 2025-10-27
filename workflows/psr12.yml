@@ -1,25 +1,37 @@
 ## Test PHP code style with PHP CS Fixer
-name: PHP CS Fixer
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
-jobs:
-  fix:
-    runs-on: ubuntu-latest
+name: PHP CS Fixer  ## Nom du workflow
+on: ## C'est ce qui dit "quand le workflow tourn""
+  push:
+    branches: [ main ] ## le workflow se lance quand on push sur la branche main
+  pull_request:
+    branches: [ main ] ## le workflow se lance quand on ouvre ou met à jour une Pull Request vers main
+
+jobs: ## ici c'est la partie jobs et leurs étapes
+  fix: ## nom du job (fix) -> ici le but c'est de vérifier le style de code
+    runs-on: ubuntu-latest  ## le job tourne sur une VM Ubuntu fournie par GitHub Actions
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2 ## action github pour clone le repo dans la VM
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@v2 ## action qui installe/configure PHP dans la VM
         with:
-          php-version: '8.3'
+          php-version: '8.3' ## version de PHP qu'on veut utiliser dans le workflow
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-suggest ## installe les dépendances du projet (vendor)
 
-      - name: Run PHP CS Fixer
-        run: composer cs-check
+      - name: Run PHP CS Fixer  ## lance l'outil de style PSR-12 via Composer
+        run: composer cs-check ## exécute la commande définie dans composer.json pour vérifier/réparer le style du code
+
+## Dans ce fichier il y a :
+## Les actions GitHub utilisées (uses) :
+##      actions/checkout@v2 -> action officielle pour récup le code du repo dans l'environnement CI
+##      shivammathur/setup-php@v2 -> ça permet d'installer/configurer PHP (version, extension, etc) dans la machine GitHub Actions
+## pareil que l'autre : ce sont des actions réutilisables déclarées avec uses pas besoin d'écrire tout soi-même
+
+## Les commandes executées (run) :
+## composer install --prefer-dist --no-progress --no-suggest -> installe les dépendances PHP (le dossier vendor)
+## composer cs-check -> lance PHP CS Fixer (donc vérif/format du code selon PSR-12)
+## ici on utilise Composer + PHP CS Fixer dans ce workflow
