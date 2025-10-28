@@ -22,7 +22,7 @@ class Math
     public function division(float $a, float $b): float
     {
         if ($b == 0) {
-            throw new \InvalidArgumentException("Division par zéro interdite.");
+            throw new \InvalidArgumentException('Division par zéro interdite.');
         }
 
         return $a / $b;
