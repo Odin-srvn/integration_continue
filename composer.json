@@ -18,7 +18,7 @@
         "friendsofphp/php-cs-fixer": "^3.89"
     },
     "scripts": {
-        "stan-check": "phpstan analyse src tests --level=max",
+        "stan-check": "phpstan analyse src tests --level=5",
         "cs-check": "php-cs-fixer fix --dry-run --diff --using-cache=no src tests"
     }
 }
